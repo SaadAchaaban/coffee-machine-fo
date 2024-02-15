@@ -16,7 +16,7 @@
           <button class="btn btn-danger" (click)="turnOffMachine()" [disabled]="!state?.isOn">Turn Off</button>
         </div>
         <div class="col-md-4">
-          <button class="btn btn-primary" (click)="makeCoffee()" [disabled]="!state?.isOn || state?.isMakingCoffee">Make Coffee</button>
+          <button class="btn btn-primary" (click)="makeCoffee()" [disabled]="!state?.isOn || state?.isMakingCoffee || state?.IsInAlertState">Make Coffee</button>
         </div>
       </div>
     </div>

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { CoffeeMachineService } from './services/coffee-machine.service';
+import { CoffeeMachineState } from './interfaces/CoffeeMachineState.interface';
 
 @Component({
   selector: 'app-root',
@@ -12,15 +15,7 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
 
   title = 'ICoffeeMachine';
-  
-  state = {
-    isOn: false,
-    isMakingCoffee: false,
-    waterLevelState: 0,
-    beanFeedState: 0,
-    wasteCoffeeState: 0,
-    waterTrayState: 0,
-  }
+  state: CoffeeMachineState | null = null;
 
   coffeeData = {
     "14/02/2024": {
@@ -55,8 +50,55 @@ export class AppComponent {
     hours: Object.entries(hours).map(([hourRange, cups]) => ({hourRange, cups}))
   }));
 
-  turnOnMachine(): void {}
-  turnOffMachine(): void {}
-  makeCoffee(): void {}
+  constructor(
+    private coffeeMachineService: CoffeeMachineService,
+  ) {}
+
+  ngOnInit(): void {
+    this.coffeeMachineService.startFetchInterval();
+    this.coffeeMachineService.state.subscribe(state => {
+      this.state = state;
+    });
+  }
+
+  turnOnMachine(): void {
+    this.coffeeMachineService.turnOn().subscribe({
+      next: async (result: any) => {
+        if (this.state) {
+            this.state.isOn = true;
+        }
+      },
+      error: async (err: any) => {
+          console.log("error", err);
+      },
+      complete: () => {}
+    });
+  }
+
+  turnOffMachine(): void {
+    this.coffeeMachineService.turnOff().subscribe({
+      next: async (result: any) => {
+        if (this.state) {
+          this.state.isOn = false;
+        }
+      },
+      error: async (err: any) => {
+          console.log("error", err);
+      },
+      complete: () => {}
+    });
+  }
+
+  makeCoffee(): void {
+    this.coffeeMachineService.makeCoffee().subscribe({
+      next: async (result: any) => {
+        console.log("result", result);
+      },
+      error: async (err: any) => {
+          console.log("error", err);
+      },
+      complete: () => {}
+    });
+  }
 
 }
