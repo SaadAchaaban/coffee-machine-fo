@@ -1,2 +1,99 @@
-<h1>CoffeeMachine</h1>
-<router-outlet></router-outlet>
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-flex">
+  <a class="navbar-brand d-flex align-items-center">
+    <img src="assets/images/logo.png" width="80" height="80" class="d-inline-block align-top" alt="">
+    <span class="navbar-title">{{ title }}</span>
+  </a>
+</nav>
+
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <button class="btn btn-success" (click)="turnOnMachine()" [disabled]="state?.isOn">Turn On</button>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-danger" (click)="turnOffMachine()" [disabled]="!state?.isOn">Turn Off</button>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-primary" (click)="makeCoffee()" [disabled]="!state?.isOn || state?.isMakingCoffee">Make Coffee</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="card-text">Machine On: {{ state?.isOn ? 'Yes' : 'No' }}</p>
+        </div>
+        <div class="col-md-6">
+          <p class="card-text">Making Coffee: {{ state?.isMakingCoffee ? 'Yes' : 'No' }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="card-text">Water Level: {{ state?.waterLevelState === 0 ? 'Okay' : 'Alert' }}</p>
+        </div>
+        <div class="col-md-6">
+          <p class="card-text">Bean Feeder Status: {{ state?.beanFeedState === 0 ? 'Okay' : 'Alert' }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="card-text">Coffee Waste Status: {{ state?.wasteCoffeeState === 0 ? 'Okay' : 'Alert' }}</p>
+        </div>
+        <div class="col-md-6">
+          <p class="card-text">Water Tray Status: {{ state?.waterTrayState === 0 ? 'Okay' : 'Alert' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Statistics by Day</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">First Cup Time</th>
+                <th scope="col">Last Cup Time</th>
+                <th scope="col">Average Cups</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of coffeeDataArray">
+                <th scope="row">{{ data.date }}</th>
+                <td>{{ data.firstCupTime }}</td>
+                <td>{{ data.lastCupTime }}</td>
+                <td>{{ data.averageCups }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <h3>Statistics by Hour</h3>
+          <div *ngFor="let day of coffeeHourlyDataArray">
+            <h5>{{ day.date }}</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Hour Range</th>
+                  <th scope="col">Cups</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hour of day.hours">
+                  <td>{{ hour.hourRange }}</td>
+                  <td>{{ hour.cups }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

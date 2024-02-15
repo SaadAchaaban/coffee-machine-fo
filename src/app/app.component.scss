@@ -1,0 +1,22 @@
+.navbar-brand {
+  flex-grow: 1; /* Permet au titre de prendre tout l'espace disponible */
+  justify-content: center; /* Centre le contenu horizontalement */
+}
+.navbar-title {
+  font-size: 1.5rem; /* Augmente la taille du texte */
+  font-weight: bold; /* Optionnel: rend le texte en gras */
+}
+/* Assurez-vous que l'image reste alignée à gauche */
+.navbar-brand img {
+  position: absolute;
+  left: 1rem; /* Ajustez selon la marge souhaitée */
+}
+
+nav{
+  margin-bottom: 2rem;
+}
+
+div.card
+{
+  margin-bottom: 1rem;
+}
