@@ -64,7 +64,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of coffeeDataArray">
+              <tr *ngFor="let data of dailyStatistics">
                 <th scope="row">{{ data.date }}</th>
                 <td>{{ data.firstCupTime }}</td>
                 <td>{{ data.lastCupTime }}</td>
@@ -75,7 +75,7 @@
         </div>
         <div class="col-md-6">
           <h3>Statistics by Hour</h3>
-          <div *ngFor="let day of coffeeHourlyDataArray">
+          <div *ngFor="let day of hourlyStatistics">
             <h5>{{ day.date }}</h5>
             <table class="table">
               <thead>
@@ -87,7 +87,7 @@
               <tbody>
                 <tr *ngFor="let hour of day.hours">
                   <td>{{ hour.hourRange }}</td>
-                  <td>{{ hour.cups }}</td>
+                  <td>{{ hour.count }}</td>
                 </tr>
               </tbody>
             </table>

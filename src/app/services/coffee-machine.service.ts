@@ -19,7 +19,7 @@ export class CoffeeMachineService {
   constructor( private http: HttpClient ) { }
 
   fetchState() {
-    const headers = this.headers.set('accept', '*/*');
+    const headers = this.headers.set('content-type', 'application/json');
     this.http.get<CoffeeMachineState>(`${this.baseURL}/CoffeeMachine/GetCurrentState`, { headers })
       .subscribe({
         next: (state) => {
@@ -27,7 +27,7 @@ export class CoffeeMachineService {
           this._state.next(state);
         },
         error: (err) => {
-          console.log(err);
+          console.log("CoffeeMachineService::fetchState  err=",err);
         }
       });
   }
@@ -39,17 +39,17 @@ export class CoffeeMachineService {
   }
 
   turnOn(): Observable<any> {
-    const headers = this.headers.set('content-type', 'application/json')
+    const headers = this.headers.set('content-type', 'application/json');
     return this.http.post<any>(`${this.baseURL}/CoffeeMachine/TurnOn`, { headers });
   }
 
   turnOff(): Observable<any> {
-    const headers = this.headers.set('content-type', 'application/json')
+    const headers = this.headers.set('content-type', 'application/json');
     return this.http.post<any>(`${this.baseURL}/CoffeeMachine/TurnOff`, { headers });
   }
 
   makeCoffee(): Observable<any> {
-    const headers = this.headers.set('content-type', 'application/json')
+    const headers = this.headers.set('content-type', 'application/json');
     return this.http.post<any>(`${this.baseURL}/CoffeeMachine/MakeCoffee`, { headers });
   }
 }

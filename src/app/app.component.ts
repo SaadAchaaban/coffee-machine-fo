@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { CoffeeMachineService } from './services/coffee-machine.service';
 import { CoffeeMachineState } from './interfaces/CoffeeMachineState.interface';
+import { StatisticService } from './services/statistic.service';
 
 @Component({
   selector: 'app-root',
@@ -16,48 +16,26 @@ export class AppComponent {
 
   title = 'ICoffeeMachine';
   state: CoffeeMachineState | null = null;
-
-  coffeeData = {
-    "14/02/2024": {
-      "firstCupTime": "15:27",
-      "lastCupTime": "15:27",
-      "averageCups": 1
-    },
-    "15/02/2024": {
-      "firstCupTime": "14:54",
-      "lastCupTime": "16:19",
-      "averageCups": 7
-    }
-  };
-
-  coffeeDataArray = Object.entries(this.coffeeData).map(([date, data]) => ({
-    date,
-    ...data
-  }));
-
-  coffeeHourlyData = {
-    "14/02/2024": {
-      "15-16": 1
-    },
-    "15/02/2024": {
-      "14-15": 5,
-      "16-17": 2
-    }
-  };
-
-  coffeeHourlyDataArray = Object.entries(this.coffeeHourlyData).map(([date, hours]) => ({
-    date,
-    hours: Object.entries(hours).map(([hourRange, cups]) => ({hourRange, cups}))
-  }));
+  dailyStatistics: any;
+  hourlyStatistics: any;
 
   constructor(
     private coffeeMachineService: CoffeeMachineService,
+    private statisticService: StatisticService,
   ) {}
 
   ngOnInit(): void {
     this.coffeeMachineService.startFetchInterval();
+    this.statisticService.fetchDailyStatistics();
+    this.statisticService.fetchHourlyStatistics();
     this.coffeeMachineService.state.subscribe(state => {
       this.state = state;
+    });
+    this.statisticService.dailyStatistics.subscribe(dailyStatistics => {
+      this.dailyStatistics = dailyStatistics;
+    });
+    this.statisticService.hourlyStatistics.subscribe(hourlyStatistics => {
+      this.hourlyStatistics = hourlyStatistics;
     });
   }
 
@@ -69,7 +47,7 @@ export class AppComponent {
         }
       },
       error: async (err: any) => {
-          console.log("error", err);
+          console.log("AppComponent::turnOnMachine => error =", err);
       },
       complete: () => {}
     });
@@ -83,7 +61,7 @@ export class AppComponent {
         }
       },
       error: async (err: any) => {
-          console.log("error", err);
+          console.log("AppComponent::turnOffMachine => error =", err);
       },
       complete: () => {}
     });
@@ -92,10 +70,11 @@ export class AppComponent {
   makeCoffee(): void {
     this.coffeeMachineService.makeCoffee().subscribe({
       next: async (result: any) => {
-        console.log("result", result);
+        this.statisticService.fetchDailyStatistics();
+        this.statisticService.fetchHourlyStatistics();
       },
       error: async (err: any) => {
-          console.log("error", err);
+          console.log("AppComponent::makeCoffee => error =", err);
       },
       complete: () => {}
     });
